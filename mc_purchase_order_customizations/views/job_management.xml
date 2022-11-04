@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--INHERIT SEARCH VIEW-->
+    <record id="jobs_management_search_view" model="ir.ui.view">
+        <field name="name">jobs.management.order.search.view</field>
+        <field name="model">jobs.management</field>
+        <field name="inherit_id" ref="manage_jobs.view_jobs_management_search"/>
+        <field name="arch" type="xml">
+            <!--EXTENDING SEARCH OPTIONS-->
+            <xpath expr="//search//field[@name='name']" position="attributes">
+                <attribute name="filter_domain">
+                    ['|', '|', '|', '|', '|', '|', '|', ('name','ilike',self), ('partner_id','ilike',self),
+                    ('company_id','ilike',self), ('type','ilike',self), ('invoice_number','ilike',self),
+                    ('status','ilike',self), ('remark','ilike',self), ('purchase_order_id','ilike',self)]
+                </attribute>
+            </xpath>
+            <xpath expr="//search" position="inside">
+                <field name="total"/>
+            </xpath>
+        </field>
+    </record>
+    <!--tree view inherit-->
+    <record id="jobs_management_tree_view" model="ir.ui.view">
+        <field name="name">jobs.management.order.tree.view</field>
+        <field name="model">jobs.management</field>
+        <field name="inherit_id" ref="manage_jobs.jobs_management_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='purchase_number']" position="replace">
+                <field name="purchase_order_id" options="{'no_create':True}"/>
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-danger">status == 'close'</attribute>
+            </xpath>
+        </field>
+    </record>
+    <!--form view inherit-->
+    <record id="jobs_management_form_view" model="ir.ui.view">
+        <field name="name">jobs.management.form.view</field>
+        <field name="model">jobs.management</field>
+        <field name="inherit_id" ref="manage_jobs.jobs_management_views"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='purchase_number']" position="replace">
+                <field name="purchase_order_id" options="{'no_create':True}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

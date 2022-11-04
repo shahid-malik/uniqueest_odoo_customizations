@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="customer_payment_detail_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <style>
+                            #print_date{
+                            font-size: 18px;
+                            margin-bottom: 10px;
+                            }
+                            #payment_detail th{
+                            background-color: #84887c;
+                            color: #fff;
+                            font-size: 18px;
+                            }
+                            #payment_detail td{
+                            font-size: 18px;
+                            }
+                        </style>
+                        <t t-set="invoices"
+                           t-value="request.env['account.move'].sudo().search([('partner_id','=',o.id)])"/>
+                        <t t-set="amount_total" t-value="0.0"/>
+                        <t t-set="amount_residual" t-value="0.0"/>
+                        <t t-foreach="invoices" t-as="invoice">
+                            <t t-set="amount_total" t-value="amount_total+invoice.amount_total"/>
+                            <t t-set="amount_residual" t-value="amount_residual+invoice.amount_residual"/>
+                        </t>
+                        <t t-set="amount_paid" t-value="amount_total-amount_residual"/>
+
+                        <div id="print_date" class="text-right">
+                            Printed on:
+                            <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/>
+                        </div>
+                        <table id="payment_detail" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Customer Name</th>
+                                    <th>No. of Invoices</th>
+                                    <th>Total Amount</th>
+                                    <th>Paid Amount</th>
+                                    <th>Residual Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <t t-esc="o.name"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="len(invoices)"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="amount_total"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="amount_paid" t-options='{"widget": "float", "precision": 2}'/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="amount_residual"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!--
+                                        <div class="page">
+                                            <style>
+                                                p{
+                                                font-size:20px;
+                                                }
+                                                #title{
+                                                margin-bottom: 20px;
+                                                }
+                                            </style>
+                                            <div class="row" id="title">
+                                                <div class="col-6">
+                                                    <p>
+                                                        Name:
+                                                        <t t-esc="o.name"/>
+                                                    </p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p>
+                                                        Date:
+                                                        <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d.%m.%Y')"/>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <t t-set="invoices"
+                                               t-value="request.env['account.move'].sudo().search([('partner_id','=',o.id)])"/>
+                                            <p>
+                                                Total Invoice(s):
+                                                <t t-esc="len(invoices)"/>
+                                            </p>
+                                            <t t-set="amount_total" t-value="0.0"/>
+                                            <t t-set="amount_residual" t-value="0.0"/>
+                                            <t t-foreach="invoices" t-as="invoice">
+                                                <t t-set="amount_total" t-value="amount_total+invoice.amount_total"/>
+                                                <t t-set="amount_residual" t-value="amount_residual+invoice.amount_residual"/>
+                                            </t>
+                                            <t t-set="amount_paid" t-value="amount_total-amount_residual"/>
+                                            <p>
+                                                Total invoice amount:
+                                                <t t-esc="amount_total"/>
+                                            </p>
+                                            <p>
+                                                Remaining amount:
+                                                <t t-esc="amount_residual"/>
+                                            </p>
+                                            <p>
+                                                Remaining paid:
+                                                <t t-esc="amount_paid" t-options='{"widget": "float", "precision": 2}'/>
+                                            </p>
+                                        </div>
+                    -->
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

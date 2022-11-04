@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="expense_views_form_inherit" model="ir.ui.view">
+            <field name="name">expense.views.form.inherit</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group/group[2]/field[@name='company_id']" position="after">
+                    <field name="job_management_id" domain="[('user_id', '=', uid)]" attrs="{'readonly': [('readonly_job_id', '=', True)]}"/>
+                    <field name="submitted_by"/>
+                    <field name="readonly_job_id" invisible="1"/>
+                </xpath>
+                <xpath expr="//group/group[2]/field[@name='employee_id']" position="attributes">
+                    <attribute name="string">Bills Submitted By</attribute>
+                </xpath>
+                <xpath expr="//group/group[2]/field[@name='company_id']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+                <xpath expr="//group/group[3]/div/field[@name='payment_mode']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('readonly_job_id', '=', True)]}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="expense_views_tree_inherit1" model="ir.ui.view">
+            <field name="name">hr.expense.tree.inherit</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.hr_expense_view_expenses_analysis_tree"/>
+            <field name="arch" type="xml">
+                <field name="employee_id" position="attributes">
+                    <attribute name="string">Bills Submitted By</attribute>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

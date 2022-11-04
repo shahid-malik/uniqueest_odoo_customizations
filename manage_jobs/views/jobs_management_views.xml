@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="jobs_management_views" model="ir.ui.view">
+            <field name="model">jobs.management</field>
+            <field name="arch" type="xml">
+                <form string="Jobs Management">
+                    <header>
+                        <button name="action_confirm" type="object" class="btn btn-primary" string="Finish Project" attrs="{'invisible': [('status', '!=', 'open')]}"/>
+                        <button name="action_reopen" type="object" class="btn btn-primary" string="Reopen Project" attrs="{'invisible': [('status', '=', 'open')]}"/>
+                        <button name="action_cancel" type="object" class="oe_stat_button" string="Cancel Record" attrs="{'invisible': [('status', '!=', 'open')]}"/>
+                        <field name="status" widget="statusbar" statusbar_visible="open,close"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_users"
+                                    type="object" class="oe_start_button"
+                                    icon="fa-users" string="Users" groups="manage_jobs.group_job_management_user">
+                                <field name="users_count" widget="statinfo" groups="manage_jobs.group_job_management_user"/>
+                            </button>
+
+                            <button name="action_open_expenses"
+                                    type="object" class="oe_start_button"
+                                    icon="fa-list" string="Expenses" groups="manage_jobs.group_job_management_expense">
+                                <field name="expense_count" widget="statinfo" groups="manage_jobs.group_job_management_expense"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="partner_id" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                <field name="company_id"/>
+                                <field name="user_id" invisible="1"/>
+                                <field name="next_assign" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                <field name="type" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                <field name="users_count" invisible="1"/>
+                                <field name="expense_count" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="date" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                <field name="follow_up_date" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                <field name="purchase_number" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                <field name="invoice_number" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="remark" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                        </group>
+                        <notebook>
+                            <page string="Work Amount">
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="job_total">
+                                    <div class="oe_inline o_td_label">
+                                        <label for="without_vat_total"/>
+                                    </div>
+                                    <field name="without_vat_total" nolabel="1" widget='monetary' options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                    <div class="oe_inline o_td_label">
+                                        <label for="vat"/>
+                                    </div>
+                                    <field name="vat" nolabel="1" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                    <field name="vat_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                    <field name="total" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                    <field name="total_amount_received" widget='monetary' options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                        <label for="total_amount_pending"/>
+                                    </div>
+                                    <field name="total_amount_pending" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                                <div class="oe_clear"/>
+                            </page>
+                            <page string="Users" groups="manage_jobs.group_job_management_user">
+                                <tree editable="bottom" create="false" edit="false" delete="false" group_operator='false'>
+                                    <field name="user_ids"/>
+                                </tree>
+                            </page>
+                            <page string="Job Expenses" groups="manage_jobs.group_job_management_expense">
+                                <tree editable="bottom">
+                                    <field name="expense_ids"/>
+                                </tree>
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="expenses_profit">
+                                    <field name="without_vat_total" invisible="1"/>
+                                    <field name="without_vat_total_readonly"/>
+                                    <field name="job_expense"/>
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                        <label for="expense_profit"/>
+                                    </div>
+                                    <field name="expense_profit" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                            </page>
+                            <page string="VAT Payable" groups="manage_jobs.group_job_management_vat">
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="vat_payable">
+                                    <field name="without_vat_total" invisible="1"/>
+                                    <field name="without_vat_total_readonly"/>
+                                    <div class="oe_inline o_td_label">
+                                        <label for="total_payable"/>
+                                    </div>
+                                    <field name="total_payable" nolabel="1" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                    <field name="total_payable_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                    <field name="total_paid_amount" widget='monetary' options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                        <label for="remaining_amount"/>
+                                    </div>
+                                    <field name="remaining_amount" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                                <div class="oe_clear"/>
+                            </page>
+                            <page string="Attachments" groups="manage_jobs.group_job_management_attachment">
+                                <group>
+                                    <group>
+                                        <field name="quotation" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                        <field name="purchase_order" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                        <field name="delivery_order" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                        <field name="payment_slip" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="invoice" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                        <field name="job_report" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                        <field name="expenses_report" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                        <field name="other_report" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                        <field name="currency_id" invisible="1" attrs="{'readonly': [('status', 'in', ['cancel', 'close'])]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids" widget="mail.activity"/>
+                        <field name="message_ids" widget="mail.thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="jobs_management_tree" model="ir.ui.view">
+            <field name="name">jobs.management.tree</field>
+            <field name="model">jobs.management</field>
+            <field name="arch" type="xml">
+                <tree string="Jobs Management" decoration-success="status == 'close'" decoration-info="status == 'open'" decoration-danger="status == 'cancel'">
+<!--                    <field name="line_no"/>-->
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="company_id"/>
+                    <field name="type"/>
+                    <field name="purchase_number"/>
+                    <field name="follow_up_date"/>
+                    <field name="total" sum="Total"/>
+                    <field name="total_amount_pending" sum="Total Pending"/>
+                    <field name="remark"/>
+                    <field name="status" decoration-success="status == 'close'" decoration-info="status == 'open'" decoration-danger="status == 'cancel'" widget="badge"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_jobs_management_search" model="ir.ui.view">
+            <field name="name">jobs.management.search</field>
+            <field name="model">jobs.management</field>
+            <field name="arch" type="xml">
+                <search string="Views">
+                    <field name="name" filter_domain="['|', '|', '|', '|',('name','ilike',self),
+                    ('partner_id','ilike',self), ('company_id','ilike',self), ('type','ilike',self),
+                    ('status','ilike',self)]" string="View"/>
+                    <field name="user_id"/>
+                    <field name="status"/>
+                    <field name="company_id"/>
+                    <separator/>
+                    <filter string="My Job Records" domain="[('user_id', '=', uid)]" name="my_job_filter"/>
+                    <filter string="Open Records" domain="[('status', '=', 'open')]" name="my_job_open_status_filter"/>
+                    <filter string="Closed Records" domain="[('status', '=', 'close')]" name="my_job_close_status_filter"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Users" name="project" context="{'group_by': 'user_id'}"/>
+                        <filter string="Status" name="project" context="{'group_by': 'status'}"/>
+                        <filter string="Company" name="project" context="{'group_by': 'company_id'}"/>
+                        <filter string="Follow Up Date" name="project" context="{'group_by': 'follow_up_date'}"/>
+                        <filter string="Date" name="project" context="{'group_by': 'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="jobs_management_action" model="ir.actions.act_window">
+            <field name="name">Jobs Management</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">jobs.management</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_jobs_management_search"/>
+            <field name="domain">[('user_id', '=', uid)]</field>
+             <field name="context">{"search_default_my_job_open_status_filter":1}</field>
+            <field name="groups_id" eval="[(4, ref('manage_jobs.group_job_user'))]"/>
+        </record>
+        <record id="jobs_management_action" model="ir.actions.act_window">
+            <field name="name">Jobs Management</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">jobs.management</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_jobs_management_search"/>
+            <field name="domain">[(1,'=',1)]</field>
+             <field name="context">{"search_default_my_job_open_status_filter":1}</field>
+            <field name="groups_id" eval="[(4, ref('manage_jobs.group_job_admin'))]"/>
+        </record>
+
+        <record id="action_server_job_management_close" model="ir.actions.server">
+            <field name="name">Close Selected Records</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_jobs_management" />
+            <field name="binding_model_id" ref="model_jobs_management" />
+            <field name="state">code</field>
+            <field name="code">records.action_confirm()</field>
+        </record>
+
+        <record id="action_server_job_management_cancel" model="ir.actions.server">
+            <field name="name">Cancel Selected Records</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_jobs_management" />
+            <field name="binding_model_id" ref="model_jobs_management" />
+            <field name="state">code</field>
+            <field name="code">records.action_cancel()</field>
+        </record>
+
+        <record id="action_server_job_management_reopen" model="ir.actions.server">
+            <field name="name">Reopen Selected Records</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_jobs_management" />
+            <field name="binding_model_id" ref="model_jobs_management" />
+            <field name="state">code</field>
+            <field name="code">records.action_reopen()</field>
+        </record>
+
+        <record id="hr.menu_hr_root" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6,0,[ref('hr.group_hr_manager'), ref('hr.group_hr_user'), ref('hide_employee_module')])]"/>
+        </record>
+
+        <record id="hr_expense.menu_hr_expense_root" model="ir.ui.menu">
+            <field name="groups_id" eval="[(4,ref('hide_expense_module'))]"/>
+        </record>
+
+        <menuitem id="jobs_management_root" name="Jobs Management" sequence="0"  web_icon="manage_jobs,static/description/icon.png"/>
+        <menuitem id="jobs_management_menu" name="Jobs" sequence="1" parent="jobs_management_root"/>
+
+<!--        submenu-->
+        <menuitem id="jobs_management_submenu" name="Job Quotation" sequence="1" parent="jobs_management_menu" action="jobs_management_action"/>
+    </data>
+</odoo>

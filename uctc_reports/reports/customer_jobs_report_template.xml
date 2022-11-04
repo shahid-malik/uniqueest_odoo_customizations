@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="customer_jobs_report_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <style>
+                            #print_date{
+                            font-size: 18px;
+                            margin-bottom: 10px;
+                            }
+                            #customer_jobs th{
+                            background-color: #84887c;
+                            color: #fff;
+                            font-size: 18px;
+                            }
+                            #payment_detail td{
+                            font-size: 18px;
+                            }
+                        </style>
+                        <div id="print_date" class="text-right">
+                            Printed on:
+                            <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/>
+                        </div>
+                        <table id="customer_jobs" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Sr No</th>
+                                    <th>Job No</th>
+                                    <th>Company</th>
+                                    <th>Type of Work</th>
+                                    <th>Date</th>
+                                    <th>Purchase No</th>
+                                    <th>Total</th>
+                                    <th>Received</th>
+                                    <th>Invoice No</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="job_ids"
+                                   t-value="request.env['jobs.management'].sudo().search([('partner_id','=',o.id)])"/>
+                                <t t-set="counter" t-value="1"/>
+                                <t t-foreach="job_ids" t-as="job">
+                                    <tr>
+                                        <td>
+                                            <t t-esc="counter"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="job.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="job.company_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="job.type"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="job.date"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="job.purchase_order_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="job.total"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="job.total_amount_received"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="job.invoice_number"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="job.status"/>
+                                        </td>
+                                    </tr>
+                                    <t t-set="counter" t-value="counter+1"/>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

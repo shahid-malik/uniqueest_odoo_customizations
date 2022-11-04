@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="customer_payment_detail" model="ir.actions.report">
+        <field name="name">Customer Payment Detail</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">uctc_reports.customer_payment_detail_template</field>
+        <field name="report_file">uctc_reports.customer_payment_detail_template</field>
+    </record>
+    
+    <record id="customer_jobs_report" model="ir.actions.report">
+        <field name="name">Customer Jobs Application</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">uctc_reports.customer_jobs_report_template</field>
+        <field name="report_file">uctc_reports.customer_jobs_report_template</field>
+    </record>
+</odoo>

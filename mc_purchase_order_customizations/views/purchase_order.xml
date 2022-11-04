@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--INHERIT SEARCH VIEW-->
+    <record id="purchase_order_search_view" model="ir.ui.view">
+        <field name="name">purchase.order.order.search.view</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+            <!--EXTENDING SEARCH OPTIONS-->
+            <xpath expr="//search//field[@name='name']" position="attributes">
+                <attribute name="filter_domain">
+                    ['|', '|', '|', ('name', 'ilike', self), ('partner_ref', 'ilike', self),
+                    ('pr_remarks', 'ilike', self), ('partner_id', 'child_of', self)]
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+    <!--INHERIT TREE VIEW-->
+    <record id="purchase_order_tree_view" model="ir.ui.view">
+        <field name="name">purchase.order.tree.view</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="attributes">
+                <attribute name="string">PR document</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="string">PR Representative</attribute>
+            </xpath>
+            <xpath expr="//field[@name='job_number']" position="replace">
+                <field name="job_id" options="{'no_create':True}"/>
+            </xpath>
+        </field>
+    </record>
+    <!--INHERIT FORM VIEW-->
+    <record id="purchase_order_form_view" model="ir.ui.view">
+        <field name="name">purchase.order.form.view</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='job_number']" position="replace">
+                <field name="job_id"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_ref']" position="attributes">
+                <attribute name="string">Vendor Reference#</attribute>
+            </xpath>
+            <xpath expr="//field[@name='source_document_file']" position="attributes">
+                <attribute name="string">PR document</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
