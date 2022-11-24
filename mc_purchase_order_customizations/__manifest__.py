@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "mc_purchase_order_customizations",
+    'name': "MC Purchase Order and Job Management Customizations",
 
     'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+        Customization of Modules by Mediod Consulting """,
 
     'description': """
-        Long description of module's purpose
+        Customization of Job management and purchase order modules.
     """,
 
     'author': "Mediod Consulting",
@@ -20,17 +19,15 @@
     'version': '1.0',
 
     # any module necessary for this one to work correctly
-    'depends': ['purchase','manage_jobs'],
+    'depends': ['base', 'purchase', 'manage_jobs', 'contacts', 'purchase_private_discuss_channel'],
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
-        'data/data.xml',
         'views/purchase_order.xml',
         'views/job_management.xml',
+        'views/res_partner.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
-        'demo/demo.xml',
     ],
 }

@@ -64,58 +64,6 @@
                             </tbody>
                         </table>
                     </div>
-
-                    <!--
-                                        <div class="page">
-                                            <style>
-                                                p{
-                                                font-size:20px;
-                                                }
-                                                #title{
-                                                margin-bottom: 20px;
-                                                }
-                                            </style>
-                                            <div class="row" id="title">
-                                                <div class="col-6">
-                                                    <p>
-                                                        Name:
-                                                        <t t-esc="o.name"/>
-                                                    </p>
-                                                </div>
-                                                <div class="col-6">
-                                                    <p>
-                                                        Date:
-                                                        <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d.%m.%Y')"/>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <t t-set="invoices"
-                                               t-value="request.env['account.move'].sudo().search([('partner_id','=',o.id)])"/>
-                                            <p>
-                                                Total Invoice(s):
-                                                <t t-esc="len(invoices)"/>
-                                            </p>
-                                            <t t-set="amount_total" t-value="0.0"/>
-                                            <t t-set="amount_residual" t-value="0.0"/>
-                                            <t t-foreach="invoices" t-as="invoice">
-                                                <t t-set="amount_total" t-value="amount_total+invoice.amount_total"/>
-                                                <t t-set="amount_residual" t-value="amount_residual+invoice.amount_residual"/>
-                                            </t>
-                                            <t t-set="amount_paid" t-value="amount_total-amount_residual"/>
-                                            <p>
-                                                Total invoice amount:
-                                                <t t-esc="amount_total"/>
-                                            </p>
-                                            <p>
-                                                Remaining amount:
-                                                <t t-esc="amount_residual"/>
-                                            </p>
-                                            <p>
-                                                Remaining paid:
-                                                <t t-esc="amount_paid" t-options='{"widget": "float", "precision": 2}'/>
-                                            </p>
-                                        </div>
-                    -->
                 </t>
             </t>
         </t>
